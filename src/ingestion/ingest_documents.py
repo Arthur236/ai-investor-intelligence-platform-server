@@ -3,6 +3,9 @@ from pathlib import Path
 
 from ..config import MARKDOWN_DIR, PDFS_DIR
 from ..database.save_metrics import save_metrics
+from ..embeddings.voyage_embeddings import (
+    get_embeddings,
+)
 from ..rag.kpi_extractor_rag import (
     extract_financial_metrics,
 )
@@ -19,6 +22,17 @@ COMPANY_YEAR_PATTERN = re.compile(r"^([A-Za-z]+)_10K_(\d{4})$")
 
 
 def parse_company_year(pdf_file: Path) -> tuple[str, str]:
+    """Parse a company name and year from a 10-K PDF filename.
+
+    Args:
+        pdf_file: Path object for the PDF file.
+
+    Returns:
+        A tuple containing the company name and year.
+
+    Raises:
+        ValueError: If the filename does not match the expected pattern.
+    """
     match = COMPANY_YEAR_PATTERN.match(pdf_file.stem)
     if not match:
         raise ValueError(
@@ -29,6 +43,15 @@ def parse_company_year(pdf_file: Path) -> tuple[str, str]:
 
 
 def ingest_document(pdf_path: str, embeddings) -> dict:
+    """Ingest a single PDF document and extract financial metrics.
+
+    Args:
+        pdf_path: Path to the PDF file to ingest.
+        embeddings: Embeddings instance for processing.
+
+    Returns:
+        A dictionary containing company name, year, and extracted metrics.
+    """
     pdf_file = Path(pdf_path)
     company, year = parse_company_year(pdf_file)
 
@@ -46,10 +69,14 @@ def ingest_document(pdf_path: str, embeddings) -> dict:
 
 
 def ingest_directory(input_dir: str = str(PDFS_DIR)) -> list[dict]:
-    from ..embeddings.voyage_embeddings import (
-        get_embeddings,
-    )
+    """Ingest all PDF documents from a directory and extract financial metrics.
 
+    Args:
+        input_dir: Path to the directory containing PDF files. Defaults to PDFS_DIR.
+
+    Returns:
+        A list of dictionaries containing ingested documents with their metrics.
+    """
     embeddings = get_embeddings()
     results = []
 

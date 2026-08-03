@@ -5,18 +5,18 @@ from ..vectorstore.astra_vectorstore import Retriever
 
 
 class FinancialMetrics(BaseModel):
-    revenue: str | None = Field(default=None, alias="Revenue")
-    net_income: str | None = Field(default=None, alias="Net Income")
-    operating_income: str | None = Field(default=None, alias="Operating Income")
+    revenue: str | None = Field(default=None, description="Revenue")
+    net_income: str | None = Field(default=None, description="Net Income")
+    operating_income: str | None = Field(default=None, description="Operating Income")
     cash_flow: str | None = Field(
-        default=None, alias="Cash Flow from Operating Activities"
+        default=None, description="Cash Flow from Operating Activities"
     )
-    total_assets: str | None = Field(default=None, alias="Total Assets")
-    total_liabilities: str | None = Field(default=None, alias="Total Liabilities")
-    risk_factors: str | None = Field(default=None, alias="Top Risk Factors")
-    growth_drivers: str | None = Field(default=None, alias="Top Growth Drivers")
-
-    model_config = {"populate_by_name": True}
+    total_assets: str | None = Field(default=None, description="Total Assets")
+    total_liabilities: str | None = Field(
+        default=None, description="Total Liabilities"
+    )
+    risk_factors: str | None = Field(default=None, description="Top Risk Factors")
+    growth_drivers: str | None = Field(default=None, description="Top Growth Drivers")
 
 
 def retrieve_context(retriever: Retriever, company: str, year: str) -> str:

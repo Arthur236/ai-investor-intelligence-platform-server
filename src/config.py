@@ -26,6 +26,7 @@ POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE", "")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
+POSTGRES_SSLMODE = os.getenv("POSTGRES_SSLMODE", "require")
 
 ALLOWED_ORIGINS = [
     origin.strip()

@@ -47,7 +47,7 @@ Activities:
 
 Status: Completed
 
-Module: `src/ai_investor_intelligence_platform/ingestion/pdf_to_markdown.py`
+Module: `src/ingestion/pdf_to_markdown.py`
 
 Objective: Convert annual report PDFs into markdown format suitable for downstream LLM processing.
 
@@ -61,7 +61,7 @@ Output: `data/markdown/`
 
 Status: Completed
 
-Module: `src/ai_investor_intelligence_platform/ingestion/semantic_chunker.py`
+Module: `src/ingestion/semantic_chunker.py`
 
 Objective: Generate semantically meaningful chunks from markdown documents.
 
@@ -79,8 +79,8 @@ Status: Completed
 
 Modules:
 
-* `src/ai_investor_intelligence_platform/llm/anthropic_client.py`
-* `src/ai_investor_intelligence_platform/embeddings/voyage_embeddings.py`
+* `src/llm/anthropic_client.py`
+* `src/embeddings/voyage_embeddings.py`
 
 Objective: Centralize LLM and embeddings client configuration.
 
@@ -99,8 +99,8 @@ Status: Completed
 
 Modules:
 
-* `src/ai_investor_intelligence_platform/vectorstore/create_index.py`
-* `src/ai_investor_intelligence_platform/vectorstore/astra_vectorstore.py`
+* `src/vectorstore/create_index.py`
+* `src/vectorstore/astra_vectorstore.py`
 
 Objective: Store document chunks and embeddings for retrieval, with real vector similarity search.
 
@@ -116,7 +116,7 @@ Deliverables:
 
 Status: Completed
 
-Module: `src/ai_investor_intelligence_platform/rag/kpi_extractor_rag.py`
+Module: `src/rag/kpi_extractor_rag.py`
 
 Objective: Extract financial KPIs using Retrieval-Augmented Generation (RAG).
 
@@ -139,7 +139,7 @@ Output: Structured Financial Metrics (`FinancialMetrics` pydantic model)
 
 Status: Completed
 
-Modules: `src/ai_investor_intelligence_platform/database/*.py`
+Modules: `src/database/*.py`
 
 Objective: Store extracted KPI data for API consumption.
 
@@ -157,7 +157,7 @@ Output: Financial Metrics Database
 
 Status: Completed
 
-Module: `src/ai_investor_intelligence_platform/ingestion/ingest_documents.py`
+Module: `src/ingestion/ingest_documents.py`
 
 Objective: Chain PDF → Markdown → Chunk → Embed → Upload → Extract → Save into one pipeline.
 
@@ -173,7 +173,7 @@ Deliverables:
 
 Status: Completed
 
-Module: `src/ai_investor_intelligence_platform/app.py` + `src/ai_investor_intelligence_platform/routes/*.py`
+Module: `src/app.py` + `src/routes/*.py`
 
 Objective: Expose a pure JSON REST API — no server-rendered templates — for a separately-hosted
 frontend to consume. CORS enabled for local frontend dev servers.

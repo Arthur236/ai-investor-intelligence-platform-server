@@ -6,6 +6,7 @@ from ..config import (
     POSTGRES_HOST,
     POSTGRES_PASSWORD,
     POSTGRES_PORT,
+    POSTGRES_SSLMODE,
     POSTGRES_USER,
 )
 from .postgres_sql import get_engine
@@ -34,10 +35,10 @@ def create_database() -> None:
     connection = psycopg2.connect(
         host=POSTGRES_HOST,
         port=POSTGRES_PORT,
-        dbname="postgres",
+        dbname=POSTGRES_DATABASE,
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD,
-        sslmode="require",
+        sslmode=POSTGRES_SSLMODE,
     )
     connection.autocommit = True
 
@@ -53,6 +54,7 @@ def create_database() -> None:
 
 
 def create_tables() -> None:
+    """Create required tables in the target database."""
     engine = get_engine()
     with engine.begin() as connection:
         connection.execute(text(CREATE_FINANCIAL_METRICS_TABLE))

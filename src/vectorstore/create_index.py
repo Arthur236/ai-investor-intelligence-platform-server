@@ -13,11 +13,13 @@ from ..embeddings.voyage_embeddings import (
 
 
 def get_database() -> Database:
+    """Return a configured Astra DB database client."""
     client = DataAPIClient(ASTRA_DB_APPLICATION_TOKEN)
     return client.get_database(ASTRA_DB_API_ENDPOINT, keyspace=ASTRA_DB_KEYSPACE)
 
 
 def get_collection() -> Collection:
+    """Get the vector collection from the Astra database."""
     return get_database().get_collection(ASTRA_DB_COLLECTION)
 
 
@@ -28,6 +30,7 @@ def ensure_collection() -> None:
         ASTRA_DB_COLLECTION,
         dimension=EMBEDDING_DIMENSIONS,
         metric=VectorMetric.COSINE,
+        indexing={"deny": ["content"]},
         check_exists=False,
     )
 
