@@ -91,3 +91,18 @@ Both `src/database/create_table.py` and `src/database/postgres_sql.py` hardcoded
 using it in both files instead of the literal. Local `.env` set to
 `POSTGRES_SSLMODE="disable"`; `.env_example` documents the new var. Verified with
 a live `uvicorn` run — startup completes and the server binds successfully.
+
+## 2026-08-04 — `SemanticChunker` producing empty chunks broke ingestion
+
+`uv run ai-investor-intelligence-platform-server` crashed with
+`voyageai.error.InvalidRequestError: ... Input cannot contain empty strings or
+empty lists` inside `upload_chunks` (`src/vectorstore/astra_vectorstore.py`), on
+the per-chunk `embeddings.embed_query(chunk.page_content)` call. Root cause:
+`langchain_experimental`'s `SemanticChunker` (`chunk_markdown` in
+`src/ingestion/semantic_chunker.py`) can emit chunks whose `page_content` is
+empty or whitespace-only — Tesseract-OCR'd markdown routinely has blank
+lines/pages that split out this way. Voyage's embed API rejects empty strings
+outright, and nothing upstream validated chunk content before embedding. Fixed
+by filtering `documents` for non-blank `page_content` at the end of
+`chunk_markdown`, so no caller (ingestion or the module's own `__main__` smoke
+test) can pass an empty chunk through to embedding.

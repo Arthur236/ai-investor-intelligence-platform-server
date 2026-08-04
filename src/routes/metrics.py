@@ -6,7 +6,10 @@ router = APIRouter()
 
 
 @router.get("/metrics")
-def list_metrics(company: str | None = None, year: str | None = None) -> list[dict]:
+def list_metrics(
+    company: str | None = None, year: str | None = None
+) -> dict[str, list[dict]]:
+    """Retrieve metrics, optionally filtering by company and year."""
     metrics = get_metrics()
 
     if company:
@@ -14,10 +17,11 @@ def list_metrics(company: str | None = None, year: str | None = None) -> list[di
     if year:
         metrics = [m for m in metrics if m["year"] == year]
 
-    return metrics
+    return {"metrics": metrics}
 
 
 @router.get("/companies")
-def list_companies() -> list[str]:
+def list_companies() -> dict[str, list[str]]:
+    """Retrieve a sorted list of all unique companies from metrics."""
     metrics = get_metrics()
-    return sorted({m["company"] for m in metrics})
+    return {"companies": sorted({m["company"] for m in metrics})}

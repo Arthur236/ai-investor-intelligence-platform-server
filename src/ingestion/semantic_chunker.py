@@ -20,7 +20,8 @@ def chunk_markdown(markdown_file: str, embeddings) -> list[Document]:
     splitter = SemanticChunker(
         embeddings=embeddings, breakpoint_threshold_type="percentile"
     )
-    return splitter.create_documents([text])
+    documents = splitter.create_documents([text])
+    return [doc for doc in documents if doc.page_content.strip()]
 
 
 if __name__ == "__main__":

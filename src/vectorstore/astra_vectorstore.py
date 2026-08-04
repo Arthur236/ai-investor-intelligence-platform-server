@@ -49,6 +49,7 @@ class Retriever:
         year: str | None = None,
         top_k: int = 20,
     ) -> list[SimpleNamespace]:
+        """Run a vector similarity search with optional metadata filtering."""
         query_vector = self.embeddings.embed_query(query)
 
         metadata_filter: dict = {}

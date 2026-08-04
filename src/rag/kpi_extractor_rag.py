@@ -5,6 +5,8 @@ from ..vectorstore.astra_vectorstore import Retriever
 
 
 class FinancialMetrics(BaseModel):
+    """Structured financial metrics extracted from a 10-K filing."""
+
     revenue: str | None = Field(default=None, description="Revenue")
     net_income: str | None = Field(default=None, description="Net Income")
     operating_income: str | None = Field(default=None, description="Operating Income")
@@ -20,12 +22,14 @@ class FinancialMetrics(BaseModel):
 
 
 def retrieve_context(retriever: Retriever, company: str, year: str) -> str:
+    """Retrieve relevant filing context for the given company and fiscal year."""
     query = f"{company} {year} revenue net income cash flow assets liabilities risk factors growth drivers"
     chunks = retriever.invoke(query, company=company, year=year, top_k=20)
     return "\n\n".join(chunk.page_content for chunk in chunks)
 
 
 def build_extraction_prompt(company: str, year: str, context: str) -> str:
+    """Build a prompt for extracting financial metrics from filing context."""
     return f"""You are a financial analyst extracting key metrics from a 10-K filing.
 
 Company: {company}
@@ -41,6 +45,7 @@ Context:
 
 
 def extract_financial_metrics(retriever: Retriever, company: str, year: str) -> dict:
+    """Extract financial metrics for a company and fiscal year using the retriever."""
     context = retrieve_context(retriever, company, year)
     prompt = build_extraction_prompt(company, year, context)
     metrics = get_structured_completion(prompt, FinancialMetrics)
