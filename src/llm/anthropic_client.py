@@ -25,4 +25,14 @@ def get_chat_completion(system: str, message: str, model: str | None = None) -> 
     response = client.invoke(
         [SystemMessage(content=system), HumanMessage(content=message)]
     )
-    return response.content
+    return _extract_text(response.content)
+
+
+def _extract_text(content: str | list) -> str:
+    if isinstance(content, str):
+        return content
+    return "".join(
+        block.get("text", "")
+        for block in content
+        if isinstance(block, dict) and block.get("type") == "text"
+    )

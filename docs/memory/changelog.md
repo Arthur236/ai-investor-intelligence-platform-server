@@ -106,3 +106,17 @@ outright, and nothing upstream validated chunk content before embedding. Fixed
 by filtering `documents` for non-blank `page_content` at the end of
 `chunk_markdown`, so no caller (ingestion or the module's own `__main__` smoke
 test) can pass an empty chunk through to embedding.
+
+## 2026-08-05 — `/api/chat` 500: `ChatAnthropic.content` isn't always a plain string
+
+Chat requests from the frontend (`http://localhost:5173`) hit
+`pydantic_core.ValidationError` on `ChatResponse.answer` — `expected string, got
+list`. `get_chat_completion` (`src/llm/anthropic_client.py`) returned
+`response.content` from `langchain_anthropic.ChatAnthropic.invoke` directly; with
+`claude-sonnet-5` that comes back as a list of content blocks (e.g.
+`[{'type': 'text', 'text': ..., 'signature': ...}]`) rather than a bare `str`, so
+it flowed straight into a `str`-typed Pydantic field and blew up at response
+construction. Fixed by adding `_extract_text`, which passes plain strings through
+and otherwise joins the `text` field of every `type == "text"` block. Worth
+re-checking if `get_structured_completion` or any future `ChatAnthropic.invoke`
+caller reads `.content` directly — same shape mismatch would apply there too.
