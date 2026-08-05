@@ -120,3 +120,20 @@ construction. Fixed by adding `_extract_text`, which passes plain strings throug
 and otherwise joins the `text` field of every `type == "text"` block. Worth
 re-checking if `get_structured_completion` or any future `ChatAnthropic.invoke`
 caller reads `.content` directly — same shape mismatch would apply there too.
+
+## 2026-08-05 — Added SSE streaming to the chat endpoint
+
+Added `POST /api/chat/stream` alongside the existing `POST /api/chat`, so the
+frontend can render tokens as they arrive instead of waiting for the full
+answer. `stream_chat_completion` (`src/llm/anthropic_client.py`) wraps
+`ChatAnthropic.stream()` and reuses `_extract_text` per chunk (same
+list-vs-string content shape as the non-streaming path — see the entry
+above). `src/routes/chat.py` factors context retrieval out into
+`_build_system_prompt`, shared by both endpoints; `chat_stream` wraps the
+token generator in a `StreamingResponse` emitting `data: {"token": ...}\n\n`
+per chunk and a final `data: [DONE]\n\n` sentinel — plain SSE framing, no new
+dependency (`StreamingResponse` is Starlette, already a transitive FastAPI
+dep). Verified live against real Anthropic/Astra credentials: `curl -N`
+against `/api/chat/stream` showed incrementally arriving tokens ending in
+`[DONE]`, and `/api/chat` still returns a normal JSON response unaffected by
+the change.
