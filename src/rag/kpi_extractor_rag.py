@@ -14,9 +14,7 @@ class FinancialMetrics(BaseModel):
         default=None, description="Cash Flow from Operating Activities"
     )
     total_assets: str | None = Field(default=None, description="Total Assets")
-    total_liabilities: str | None = Field(
-        default=None, description="Total Liabilities"
-    )
+    total_liabilities: str | None = Field(default=None, description="Total Liabilities")
     risk_factors: str | None = Field(default=None, description="Top Risk Factors")
     growth_drivers: str | None = Field(default=None, description="Top Growth Drivers")
 
@@ -36,8 +34,22 @@ Company: {company}
 Fiscal Year: {year}
 
 Using ONLY the context below, extract the following metrics. If a value is not
-present in the context, leave it null. Keep risk factors and growth drivers to
-2-3 concise bullet points each.
+present in the context, leave it null, don't make it up or say its not in the document.
+Revenue, net income, operating income, cash flow, total assets, and total liabilities should be a single
+number and not a comparison of previous year.
+Keep risk factors and growth drivers to 2-3 concise bullet points each.
+
+Use the following sample as a guide for formatting your response in JSON:
+{
+        "Revenue": "$716,924",
+        "Net Income": "$77,670",
+        "Operating Income": "$79,975",
+        "Cash Flow": "$139,514",
+        "Total Assets": "$818,042",
+        "Total Liabilities": "$818,042M",
+        "Risk Factors": "- Risk factor 1 \n- Risk factor 2 \n- Risk factor 3",
+        "Growth Drivers": "- Growth driver 1 \n- Growth driver 2 \n- Growth driver 3"
+}
 
 Context:
 {context}
