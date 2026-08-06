@@ -45,9 +45,14 @@ Run: `uv run uvicorn src.app:app --reload` (API) or `uv run ai-investor-intellig
 
 ## Build progress
 
-All 13 phases in `docs/project_journey.md` are implemented (backend scope). Phases 12–13
-(separate frontend app, containerization/deployment) are explicitly out of scope for this
-repo and only tracked there for completeness.
+All 13 phases in `docs/project_journey.md` are implemented (backend scope). Phase 12
+(separate frontend app) is explicitly out of scope for this repo and only tracked there
+for completeness.
+
+## Deployment
+
+Live on Render: https://ai-investor-intelligence-platform-server.onrender.com/. Production
+Postgres is Supabase (local/dev Postgres config may differ — see `.env_example`).
 
 ## Known gaps / not yet done
 
